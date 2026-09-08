@@ -3,347 +3,293 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مهامي</title>
+<title>مهامي 📋</title>
 
 <style>
-*{
-  box-sizing:border-box;
-  font-family:Arial,sans-serif;
+* {
+  box-sizing: border-box;
 }
 
-body{
-  margin:0;
-  background:#f3f6fb;
-  color:#222;
+body {
+  margin: 0;
+  background: #f3f6fb;
+  color: #222;
+  font-family: Arial, sans-serif;
 }
 
-.container{
-  max-width:600px;
-  margin:auto;
-  padding:15px;
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 15px;
 }
 
-header{
-  background:#111;
-  color:white;
-  padding:25px 15px;
-  border-radius:0 0 25px 25px;
-  text-align:center;
+header {
+  background: #111;
+  color: white;
+  padding: 20px;
+  border-radius: 0 0 20px 20px;
+  text-align: center;
 }
 
-header h1{
-  margin:0 0 10px;
-  font-size:36px;
+header h1 {
+  margin: 0 0 8px;
 }
 
-header p{
-  font-size:18px;
-  margin:8px 0;
+.balance {
+  background: white;
+  color: #111;
+  padding: 15px;
+  border-radius: 15px;
+  margin-top: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
 }
 
-.balance{
-  background:white;
-  color:#111;
-  padding:20px;
-  border-radius:20px;
-  margin-top:20px;
-  font-size:24px;
-  font-weight:bold;
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
 }
 
-.tabs{
-  display:flex;
-  gap:10px;
-  margin:20px 0;
+.tabs button {
+  flex: 1;
+  padding: 12px 5px;
+  border: none;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.tabs button{
-  flex:1;
-  padding:16px 8px;
-  border:0;
-  border-radius:15px;
-  background:#ddd;
-  color:#111;
-  font-size:17px;
-  cursor:pointer;
+.tabs button.active {
+  background: #111;
+  color: white;
 }
 
-.tabs button.active{
-  background:#111;
-  color:white;
+.card {
+  background: white;
+  padding: 18px;
+  margin-top: 15px;
+  border-radius: 16px;
+  box-shadow: 0 3px 12px #0001;
 }
 
-.card{
-  background:white;
-  padding:20px;
-  margin-bottom:15px;
-  border-radius:20px;
-  box-shadow:0 3px 12px #0001;
+.task {
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 14px;
+  margin-top: 12px;
 }
 
-.task{
-  border:1px solid #ddd;
-  padding:15px;
-  border-radius:15px;
-  margin-top:12px;
+.task h3 {
+  margin-top: 0;
 }
 
-.task h3{
-  margin:0 0 8px;
+.points {
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
-.task p{
-  color:#666;
-  line-height:1.6;
+button {
+  border: none;
+  padding: 11px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
 }
 
-.points{
-  font-weight:bold;
-  font-size:18px;
-  margin:10px 0;
+.tiktok {
+  background: #000;
+  color: white;
+  width: 100%;
+  margin-bottom: 8px;
 }
 
-button{
-  border:0;
-  cursor:pointer;
+.complete {
+  background: #16a34a;
+  color: white;
+  width: 100%;
 }
 
-.complete{
-  width:100%;
-  padding:14px;
-  background:#111;
-  color:white;
-  border-radius:12px;
-  font-size:17px;
+.complete:disabled {
+  background: #999;
+  cursor: not-allowed;
 }
 
-.complete:disabled{
-  background:#aaa;
-  cursor:not-allowed;
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 15px;
 }
 
-.delete{
-  margin-top:8px;
-  padding:10px;
-  background:#eee;
-  color:#b00000;
-  border-radius:10px;
+.add {
+  width: 100%;
+  background: #111;
+  color: white;
 }
 
-input,textarea{
-  width:100%;
-  padding:14px;
-  margin:8px 0;
-  border:1px solid #ddd;
-  border-radius:12px;
-  font-size:16px;
+.hidden {
+  display: none;
 }
 
-.add{
-  width:100%;
-  padding:14px;
-  background:#111;
-  color:white;
-  border-radius:12px;
-  font-size:17px;
-}
-
-.hidden{
-  display:none;
-}
-
-.empty{
-  text-align:center;
-  color:#777;
-  padding:25px;
-}
-
-.warning{
-  background:#fff3cd;
-  padding:15px;
-  border-radius:12px;
-  line-height:1.7;
+.empty {
+  text-align: center;
+  color: #777;
+  padding: 20px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>📋 مهامي</h1>
-  <p>أنجز المهام واحصل على النقاط</p>
-
-  <div class="balance">
-    ⭐ رصيدك: <span id="balance">0</span> نقطة
-  </div>
-</header>
-
 <div class="container">
 
-  <div class="tabs">
-    <button id="tasksTab" class="active" onclick="showPage('tasks')">
-      المهام
-    </button>
+<header>
+  <h1>مهامي 📋</h1>
+  <div>أنجز المهام واحصل على النقاط</div>
+</header>
 
-    <button id="addTab" onclick="showPage('add')">
-      إضافة مهمة
-    </button>
+<div class="balance">
+  رصيدك: <span id="balance">0</span> نقطة ⭐
+</div>
 
-    <button id="termsTab" onclick="showPage('terms')">
-      الشروط
-    </button>
-  </div>
+<div class="tabs">
+  <button class="active" onclick="showTab('tasks', this)">المهام</button>
+  <button onclick="showTab('add', this)">إضافة مهمة</button>
+  <button onclick="showTab('terms', this)">الشروط</button>
+</div>
 
-  <!-- المهام -->
-  <section id="tasksPage" class="card">
-    <h2>📋 المهام المتاحة</h2>
+<!-- المهام -->
+<div id="tasks" class="card">
 
-    <div id="tasksList"></div>
-  </section>
+  <h2>المهام المتاحة</h2>
 
-  <!-- إضافة مهمة -->
-  <section id="addPage" class="card hidden">
-    <h2>➕ إضافة مهمة</h2>
+  <div id="tasksList"></div>
 
-    <label>اسم المهمة</label>
-    <input id="taskName" type="text" placeholder="مثال: مشاهدة إعلان">
+</div>
 
-    <label>وصف المهمة</label>
-    <textarea id="taskDescription"
-      placeholder="اكتب تفاصيل المهمة هنا"></textarea>
+<!-- إضافة مهمة -->
+<div id="add" class="card hidden">
 
-    <label>عدد النقاط</label>
-    <input id="taskPoints"
-      type="number"
-      min="1"
-      placeholder="مثال: 10">
+  <h2>إضافة مهمة</h2>
 
-    <button class="add" onclick="addTask()">
-      إضافة المهمة
-    </button>
-  </section>
+  <label>اسم المهمة</label>
+  <input id="taskTitle" placeholder="مثال: شاهد فيديو TikTok">
 
-  <!-- الشروط -->
-  <section id="termsPage" class="card hidden">
-    <h2>📋 شروط استخدام التطبيق</h2>
+  <label>وصف المهمة</label>
+  <textarea id="taskDescription"
+    placeholder="اكتب وصف المهمة"></textarea>
 
-    <div class="warning">
-      <p>1️⃣ يجب تنفيذ المهمة بالشكل المطلوب للحصول على النقاط.</p>
+  <label>عدد النقاط</label>
+  <input id="taskPoints" type="number" placeholder="مثال: 10">
 
-      <p>2️⃣ لا يمكن احتساب المهمة نفسها أكثر من مرة.</p>
+  <label>رابط TikTok</label>
+  <input id="taskLink"
+    placeholder="ضع رابط TikTok هنا">
 
-      <p>3️⃣ يحق لإدارة التطبيق تعديل أو حذف أي مهمة.</p>
+  <button class="add" onclick="addTask()">
+    إضافة المهمة
+  </button>
 
-      <p>4️⃣ النقاط الموجودة داخل التطبيق ليست أموالًا حقيقية إلا إذا أعلنت الإدارة عن نظام استبدال رسمي.</p>
+</div>
 
-      <p>5️⃣ يمنع استخدام التطبيق بطريقة مخالفة أو محاولة التلاعب بالنقاط.</p>
+<!-- الشروط -->
+<div id="terms" class="card hidden">
 
-      <p>6️⃣ يمكن تعديل شروط التطبيق مستقبلًا عند الحاجة.</p>
-    </div>
-  </section>
+  <h2>شروط الاستخدام</h2>
+
+  <p>1. يجب تنفيذ المهمة قبل الضغط على زر إكمال المهمة.</p>
+
+  <p>2. يمنع استغلال الأخطاء أو محاولة الحصول على النقاط بشكل غير مشروع.</p>
+
+  <p>3. يمكن للمشرف تعديل المهام أو حذفها في أي وقت.</p>
+
+  <p>4. النقاط الظاهرة في هذا الإصدار محفوظة على جهاز المستخدم.</p>
+
+  <p>5. في النسخة النهائية سيتم إضافة نظام حسابات وقاعدة بيانات لحماية النقاط.</p>
+
+  <p>6. يجب احترام شروط وسياسات TikTok عند تنفيذ مهام TikTok.</p>
+
+</div>
 
 </div>
 
 <script>
 
-let points = Number(localStorage.getItem("points")) || 0;
+const tiktokLink =
+"https://www.tiktok.com/@s_h_h_s12/video/7682774944039587090?_r=1&u_code=ega9711em4231k&preview_pb=0&sharer_language=ar&_d=emic07f068behc&share_item_id=7682774944039587090&source=h5_m&timestamp=1788876469&user_id=7417056686202618898&sec_user_id=MS4wLjABAAAA8mBjNy1q7d3GB2cdaJn_R0EhOxsYRJGMxwn1VPGa2Z2lp5NVU1XwG9fPLH_bOTWe&item_author_type=1&social_share_type=0&utm_source=copy&utm_campaign=client_share&utm_medium=android";
 
-let tasks = JSON.parse(
-  localStorage.getItem("tasks") || "[]"
-);
+let balance = Number(localStorage.getItem("balance")) || 0;
 
-function saveData(){
-  localStorage.setItem("points", points);
+let tasks = JSON.parse(localStorage.getItem("tasks"));
+
+if (!tasks) {
+
+  tasks = [
+    {
+      id: 1,
+      title: "مهمة TikTok 🎵",
+      description: "افتح رابط TikTok وشاهد الفيديو ثم أكمل المهمة.",
+      points: 10,
+      link: tiktokLink
+    }
+  ];
+
   localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-function updateBalance(){
-  document.getElementById("balance").textContent = points;
+function updateBalance() {
+  document.getElementById("balance").textContent = balance;
+  localStorage.setItem("balance", balance);
 }
 
-function showPage(page){
-
-  document.getElementById("tasksPage")
-    .classList.add("hidden");
-
-  document.getElementById("addPage")
-    .classList.add("hidden");
-
-  document.getElementById("termsPage")
-    .classList.add("hidden");
-
-  document.getElementById("tasksTab")
-    .classList.remove("active");
-
-  document.getElementById("addTab")
-    .classList.remove("active");
-
-  document.getElementById("termsTab")
-    .classList.remove("active");
-
-  if(page === "tasks"){
-    document.getElementById("tasksPage")
-      .classList.remove("hidden");
-
-    document.getElementById("tasksTab")
-      .classList.add("active");
-  }
-
-  if(page === "add"){
-    document.getElementById("addPage")
-      .classList.remove("hidden");
-
-    document.getElementById("addTab")
-      .classList.add("active");
-  }
-
-  if(page === "terms"){
-    document.getElementById("termsPage")
-      .classList.remove("hidden");
-
-    document.getElementById("termsTab")
-      .classList.add("active");
-  }
-}
-
-function renderTasks(){
+function displayTasks() {
 
   const list = document.getElementById("tasksList");
 
-  list.innerHTML = "";
-
-  if(tasks.length === 0){
+  if (tasks.length === 0) {
     list.innerHTML =
-      '<div class="empty">لا توجد مهام حاليًا</div>';
+      '<div class="empty">لا توجد مهام حاليا</div>';
     return;
   }
 
-  tasks.forEach((task,index)=>{
+  list.innerHTML = "";
+
+  tasks.forEach(task => {
 
     const div = document.createElement("div");
 
     div.className = "task";
 
     div.innerHTML = `
-      <h3>${escapeHTML(task.name)}</h3>
+      <h3>${task.title}</h3>
 
-      <p>${escapeHTML(task.description)}</p>
+      <p>${task.description}</p>
 
       <div class="points">
         ⭐ ${task.points} نقطة
       </div>
 
-      <button
-        class="complete"
-        onclick="completeTask(${index})"
-        ${task.completed ? "disabled" : ""}>
-        ${task.completed ? "✅ تم إكمال المهمة" : "إكمال المهمة"}
-      </button>
+      ${
+        task.link
+        ? `
+        <button class="tiktok"
+          onclick="openTask('${task.link}')">
+          🎵 فتح TikTok
+        </button>
+        `
+        : ""
+      }
 
-      <button
-        class="delete"
-        onclick="deleteTask(${index})">
-        🗑️ حذف المهمة
+      <button class="complete"
+        onclick="completeTask(${task.id})">
+        إكمال المهمة
       </button>
     `;
 
@@ -351,98 +297,102 @@ function renderTasks(){
   });
 }
 
-function addTask(){
+function openTask(link) {
+  window.open(link, "_blank");
+}
 
-  const name =
-    document.getElementById("taskName").value.trim();
+function completeTask(id) {
+
+  const task = tasks.find(t => t.id === id);
+
+  if (!task) return;
+
+  balance += Number(task.points);
+
+  tasks = tasks.filter(t => t.id !== id);
+
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+
+  updateBalance();
+
+  alert(
+    "أحسنت! 🎉 تمت إضافة " +
+    task.points +
+    " نقطة إلى رصيدك."
+  );
+
+  displayTasks();
+}
+
+function addTask() {
+
+  const title =
+    document.getElementById("taskTitle").value.trim();
 
   const description =
     document.getElementById("taskDescription").value.trim();
 
-  const taskPoints =
+  const points =
     Number(document.getElementById("taskPoints").value);
 
-  if(!name){
-    alert("اكتب اسم المهمة");
+  const link =
+    document.getElementById("taskLink").value.trim();
+
+  if (!title || !description || !points) {
+
+    alert("يرجى ملء بيانات المهمة.");
+
     return;
   }
 
-  if(!taskPoints || taskPoints < 1){
-    alert("اكتب عدد نقاط صحيح");
-    return;
-  }
+  const newTask = {
 
-  tasks.push({
-    name:name,
-    description:description || "لا يوجد وصف",
-    points:taskPoints,
-    completed:false
-  });
+    id: Date.now(),
 
-  saveData();
+    title: title,
 
-  document.getElementById("taskName").value="";
-  document.getElementById("taskDescription").value="";
-  document.getElementById("taskPoints").value="";
+    description: description,
 
-  renderTasks();
+    points: points,
 
-  updateBalance();
+    link: link
 
-  showPage("tasks");
+  };
+
+  tasks.push(newTask);
+
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+
+  document.getElementById("taskTitle").value = "";
+  document.getElementById("taskDescription").value = "";
+  document.getElementById("taskPoints").value = "";
+  document.getElementById("taskLink").value = "";
 
   alert("تمت إضافة المهمة بنجاح ✅");
+
+  displayTasks();
+
+  showTab("tasks", document.querySelector(".tabs button"));
 }
 
-function completeTask(index){
+function showTab(tab, button) {
 
-  if(tasks[index].completed){
-    return;
+  document.getElementById("tasks").classList.add("hidden");
+  document.getElementById("add").classList.add("hidden");
+  document.getElementById("terms").classList.add("hidden");
+
+  document.getElementById(tab).classList.remove("hidden");
+
+  document.querySelectorAll(".tabs button")
+    .forEach(btn => btn.classList.remove("active"));
+
+  if (button) {
+    button.classList.add("active");
   }
-
-  tasks[index].completed = true;
-
-  points += Number(tasks[index].points);
-
-  saveData();
-
-  updateBalance();
-
-  renderTasks();
-
-  alert(
-    "تم إكمال المهمة 🎉\n" +
-    "تمت إضافة " +
-    tasks[index].points +
-    " نقطة إلى رصيدك."
-  );
-}
-
-function deleteTask(index){
-
-  if(!confirm("هل تريد حذف هذه المهمة؟")){
-    return;
-  }
-
-  tasks.splice(index,1);
-
-  saveData();
-
-  renderTasks();
-}
-
-function escapeHTML(text){
-
-  const div = document.createElement("div");
-
-  div.textContent = text;
-
-  return div.innerHTML;
 }
 
 updateBalance();
-
-renderTasks();
+displayTasks();
 
 </script>
 
