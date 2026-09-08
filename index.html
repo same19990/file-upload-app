@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تطبيق رفع الملفات</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 25px;
+      margin-top: 30px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 12px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    button {
+      background: #222;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .points {
+      background: #fff3cd;
+      padding: 18px;
+      border-radius: 15px;
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .upload {
+      border: 2px dashed #aaa;
+      padding: 25px;
+      text-align: center;
+      border-radius: 15px;
+      margin-top: 15px;
+    }
+
+    .message {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- تسجيل الدخول -->
+  <div class="card" id="loginPage">
+    <h1>🔐 تسجيل الدخول</h1>
+
+    <p style="text-align:center;">
+      أدخل كلمة السر للدخول إلى التطبيق
+    </p>
+
+    <input
+      type="password"
+      id="password"
+      placeholder="كلمة السر">
+
+    <button onclick="login()">دخول</button>
+
+    <div class="message" id="loginMessage"></div>
+  </div>
+
+
+  <!-- التطبيق -->
+  <div class="card hidden" id="appPage">
+
+    <h1>📁 رفع الملفات</h1>
+
+    <div class="points">
+      ⭐ نقاطك الحالية:
+      <strong id="points">0</strong>
+    </div>
+
+    <div class="upload">
+      <p>اختر ملفًا من هاتفك</p>
+
+      <input type="file" id="fileInput">
+
+      <button onclick="uploadFile()">
+        رفع الملف
+      </button>
+    </div>
+
+    <div class="message" id="uploadMessage"></div>
+
+    <hr style="margin:25px 0;">
+
+    <h2>👍 نظام التفاعل</h2>
+
+    <p style="text-align:center;">
+      استخدم نقاطك داخل نظام التفاعل في التطبيق.
+    </p>
+
+    <button onclick="addPoints()">
+      ⭐ الحصول على نقطة
+    </button>
+
+    <button onclick="usePoints()">
+      👍 استخدام نقطة
+    </button>
+
+    <button onclick="logout()">
+      تسجيل الخروج
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  // كلمة السر التجريبية
+  const PASSWORD = "1234";
+
+  let points = 0;
+
+
+  function login() {
+
+    const password =
+      document.getElementById("password").value;
+
+    if (password === PASSWORD) {
+
+      document.getElementById("loginPage")
+        .classList.add("hidden");
+
+      document.getElementById("appPage")
+        .classList.remove("hidden");
+
+      document.getElementById("loginMessage")
+        .textContent = "";
+
+    } else {
+
+      document.getElementById("loginMessage")
+        .textContent = "❌ كلمة السر غير صحيحة";
+
+    }
+  }
+
+
+  function logout() {
+
+    document.getElementById("appPage")
+      .classList.add("hidden");
+
+    document.getElementById("loginPage")
+      .classList.remove("hidden");
+
+    document.getElementById("password").value = "";
+  }
+
+
+  function uploadFile() {
+
+    const file =
+      document.getElementById("fileInput").files[0];
+
+    if (!file) {
+
+      document.getElementById("uploadMessage")
+        .textContent = "❌ اختر ملفًا أولًا";
+
+      return;
+    }
+
+    document.getElementById("uploadMessage")
+      .textContent =
+      "✅ تم اختيار الملف: " + file.name;
+  }
+
+
+  function addPoints() {
+
+    points++;
+
+    updatePoints();
+
+  }
+
+
+  function usePoints() {
+
+    if (points > 0) {
+
+      points--;
+
+      updatePoints();
+
+    } else {
+
+      alert("ليس لديك نقاط كافية");
+
+    }
+  }
+
+
+  function updatePoints() {
+
+    document.getElementById("points")
+      .textContent = points;
+
+  }
+
+</script>
+
+</body>
+</html>
