@@ -3,179 +3,1129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تطبيق رفع الملفات</title>
+
+<title>تطبيق المهام والنقاط</title>
 
 <style>
-*{box-sizing:border-box;font-family:Arial,sans-serif}
+*{
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
 body{
-  margin:0;
-  background:#f4f6f8;
-  color:#222;
+    margin:0;
+    background:#f3f6fb;
+    color:#222;
 }
+
 .container{
-  max-width:500px;
-  margin:auto;
-  padding:20px;
+    max-width:600px;
+    margin:auto;
+    padding:15px;
 }
+
+header{
+    background:#111;
+    color:white;
+    padding:20px;
+    border-radius:0 0 20px 20px;
+    text-align:center;
+}
+
+header h1{
+    margin:0 0 8px;
+}
+
+.balance{
+    background:white;
+    color:#111;
+    padding:15px;
+    border-radius:15px;
+    margin-top:15px;
+    font-size:20px;
+    font-weight:bold;
+}
+
 .card{
-  background:white;
-  padding:22px;
-  border-radius:18px;
-  margin-top:20px;
-  box-shadow:0 4px 15px #0001;
+    background:white;
+    padding:18px;
+    margin-top:15px;
+    border-radius:16px;
+    box-shadow:0 3px 12px #0001;
 }
-h1{text-align:center}
-input,button{
-  width:100%;
-  padding:14px;
-  margin-top:12px;
-  border-radius:10px;
-  border:1px solid #ddd;
-  font-size:16px;
+
+.task{
+    border:1px solid #ddd;
+    padding:15px;
+    border-radius:14px;
+    margin-top:12px;
 }
-button{
-  background:#111;
-  color:white;
-  border:0;
-  cursor:pointer;
+
+.task h3{
+    margin:0 0 8px;
 }
-button:hover{opacity:.9}
+
+.task p{
+    color:#666;
+    margin:5px 0 12px;
+}
+
 .points{
-  text-align:center;
-  font-size:30px;
-  font-weight:bold;
-  margin:20px 0;
+    font-weight:bold;
+    margin-bottom:10px;
 }
-.hidden{display:none}
-.message{
-  text-align:center;
-  margin-top:12px;
-  color:#555;
+
+button{
+    width:100%;
+    padding:13px;
+    border:0;
+    border-radius:10px;
+    background:#111;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
 }
-.logout{
-  background:#d33;
+
+button:disabled{
+    background:#aaa;
+}
+
+input,textarea{
+    width:100%;
+    padding:13px;
+    margin-top:8px;
+    margin-bottom:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:16px;
+}
+
+.tabs{
+    display:flex;
+    gap:8px;
+    margin-top:15px;
+}
+
+.tabs button{
+    background:#ddd;
+    color:#222;
+}
+
+.tabs button.active{
+    background:#111;
+    color:white;
+}
+
+.hidden{
+    display:none;
+}
+
+.success{
+    color:green;
+    font-weight:bold;
+}
+
+.danger{
+    color:#b00020;
+}
+
+ul{
+    line-height:2;
 }
 </style>
 </head>
 
 <body>
 
+<header>
+    <h1>📋 مهامي</h1>
+    <div>أنجز المهام واحصل على النقاط</div>
+
+    <div class="balance">
+        ⭐ رصيدك: <span id="balance">0</span> نقطة
+    </div>
+</header>
+
 <div class="container">
 
-<!-- تسجيل الدخول -->
-<div id="loginPage" class="card">
-<h1>🔐 تسجيل الدخول</h1>
+    <div class="tabs">
+        <button id="tasksTab" class="active" onclick="showSection('tasks')">
+            المهام
+        </button>
 
-<input id="password" type="password" placeholder="كلمة السر">
+        <button id="adminTab" onclick="showSection('admin')">
+            إضافة مهمة
+        </button>
 
-<button onclick="login()">دخول</button>
+        <button id="termsTab" onclick="showSection('terms')">
+            الشروط
+        </button>
+    </div>
 
-<div id="loginMessage" class="message"></div>
+
+    <!-- المهام -->
+    <section id="tasks">
+
+        <div class="card">
+            <h2>📋 المهام المتاحة</h2>
+
+            <div id="tasksList"></div>
+        </div>
+
+    </section>
+
+
+    <!-- إضافة مهمة -->
+    <section id="admin" class="hidden">
+
+        <div class="card">
+
+            <h2>➕ إضافة مهمة جديدة</h2>
+
+            <label>اسم المهمة</label>
+            <input
+                id="taskName"
+                type="text"
+                placeholder="مثال: مشاهدة فيديو"
+            >
+
+            <label>وصف المهمة</label>
+            <textarea
+                id="taskDescription"
+                placeholder="اكتب تفاصيل المهمة"
+            ></textarea>
+
+            <label>عدد النقاط</label>
+            <input
+                id="taskPoints"
+                type="number"
+                min="1"
+                placeholder="مثال: 10"
+            >
+
+            <button onclick="addTask()">
+                إضافة المهمة
+            </button>
+
+            <p id="addMessage"></p>
+
+        </div>
+
+    </section>
+
+
+    <!-- الشروط -->
+    <section id="terms" class="hidden">
+
+        <div class="card">
+
+            <h2>📜 شروط الاستخدام</h2>
+
+            <ul>
+                <li>يجب على المستخدم تنفيذ المهمة حسب التعليمات الموضحة.</li>
+
+                <li>لا يجوز استخدام طرق غير مشروعة أو التلاعب بنظام النقاط.</li>
+
+                <li>يحق لإدارة التطبيق رفض أي مهمة لم يتم تنفيذها بالشكل الصحيح.</li>
+
+                <li>النقاط تمنح فقط بعد إكمال المهمة حسب شروطها.</li>
+
+                <li>يحق للإدارة تعديل عدد النقاط المخصصة للمهام.</li>
+
+                <li>يمنع إنشاء حسابات متعددة بهدف استغلال نظام المكافآت.</li>
+
+                <li>يحق للإدارة إيقاف الحسابات التي تخالف شروط الاستخدام.</li>
+
+                <li>استخدام التطبيق يعني موافقة المستخدم على هذه الشروط.</li>
+            </ul>
+
+        </div>
+
+    </section>
+
 </div>
 
-
-<!-- التطبيق -->
-<div id="appPage" class="hidden">
-
-<div class="card">
-<h1>📁 رفع الملفات</h1>
-
-<div class="points">
-النقاط: <span id="points">0</span>
-</div>
-
-<input type="file" id="fileInput">
-
-<button onclick="uploadFile()">رفع الملف</button>
-
-<div id="uploadMessage" class="message"></div>
-</div>
-
-<div class="card">
-<h2>❤️ الحصول على النقاط</h2>
-
-<p>
-يمكنك استخدام النقاط داخل التطبيق عند توفر الخدمات.
-</p>
-
-<button onclick="addPoints()">إضافة نقطة تجريبية</button>
-</div>
-
-<div class="card">
-<button class="logout" onclick="logout()">تسجيل الخروج</button>
-</div>
-
-</div>
-
-</div>
 
 <script>
 
-const PASSWORD = "123456";
+/* =========================
+   بيانات التطبيق
+========================= */
 
 let points = Number(localStorage.getItem("points")) || 0;
 
-function updatePoints(){
-  document.getElementById("points").textContent = points;
+let tasks = JSON.parse(
+    localStorage.getItem("tasks")
+) || [
+    {
+        id: 1,
+        name: "مهمة تجريبية",
+        description: "هذه مهمة تجريبية يمكنك تعديلها أو حذفها.",
+        points: 10
+    }
+];
+
+let completedTasks = JSON.parse(
+    localStorage.getItem("completedTasks")
+) || [];
+
+
+/* =========================
+   عرض الرصيد
+========================= */
+
+function updateBalance(){
+
+    document.getElementById("balance").textContent = points;
+
+    localStorage.setItem(
+        "points",
+        points
+    );
 }
 
-function login(){
 
-  const password =
-    document.getElementById("password").value;
+/* =========================
+   عرض المهام
+========================= */
 
-  if(password === PASSWORD){
+function displayTasks(){
 
-    document.getElementById("loginPage")
-      .classList.add("hidden");
+    const list = document.getElementById("tasksList");
 
-    document.getElementById("appPage")
-      .classList.remove("hidden");
+    list.innerHTML = "";
 
-    updatePoints();
+    if(tasks.length === 0){
 
-  }else{
+        list.innerHTML =
+        "<p>لا توجد مهام متاحة حاليًا.</p>";
 
-    document.getElementById("loginMessage")
-      .textContent = "كلمة السر غير صحيحة";
-  }
+        return;
+    }
+
+    tasks.forEach(task => {
+
+        const completed =
+        completedTasks.includes(task.id);
+
+        const div = document.createElement("div");
+
+        div.className = "task";
+
+        div.innerHTML = `
+
+            <h3>${escapeHTML(task.name)}</h3>
+
+            <p>
+                ${escapeHTML(task.description)}
+            </p>
+
+            <div class="points">
+                ⭐ ${task.points} نقطة
+            </div>
+
+            ${
+                completed
+
+                ?
+
+                `<button disabled>
+                    ✅ تم إكمال المهمة
+                </button>`
+
+                :
+
+                `<button onclick="completeTask(${task.id})">
+                    إكمال المهمة
+                </button>`
+            }
+
+        `;
+
+        list.appendChild(div);
+
+    });
 }
 
-function logout(){
 
-  document.getElementById("appPage")
-    .classList.add("hidden");
+/* =========================
+   إكمال المهمة
+========================= */
 
-  document.getElementById("loginPage")
+function completeTask(id){
+
+    const task =
+    tasks.find(t => t.id === id);
+
+    if(!task) return;
+
+    if(completedTasks.includes(id)){
+
+        alert("لقد أكملت هذه المهمة مسبقًا.");
+
+        return;
+    }
+
+    points += Number(task.points);
+
+    completedTasks.push(id);
+
+    localStorage.setItem(
+        "points",
+        points
+    );
+
+    localStorage.setItem(
+        "completedTasks",
+        JSON.stringify(completedTasks)
+    );
+
+    updateBalance();
+
+    displayTasks();
+
+    alert(
+        "🎉 أحسنت!\nتمت إضافة " +
+        task.points +
+        " نقطة إلى رصيدك."
+    );
+}
+
+
+/* =========================
+   إضافة مهمة
+========================= */
+
+function addTask(){
+
+    const name =
+    document.getElementById("taskName").value.trim();
+
+    const description =
+    document.getElementById("taskDescription").value.trim();
+
+    const taskPoints =
+    Number(
+        document.getElementById("taskPoints").value
+    );
+
+    const message =
+    document.getElementById("addMessage");
+
+
+    if(!name){
+
+        message.innerHTML =
+        "❌ اكتب اسم المهمة.";
+
+        message.className = "danger";
+
+        return;
+    }
+
+
+    if(!description){
+
+        message.innerHTML =
+        "❌ اكتب وصف المهمة.";
+
+        message.className = "danger";
+
+        return;
+    }
+
+
+    if(!taskPoints || taskPoints < 1){
+
+        message.innerHTML =
+        "❌ أدخل عدد نقاط صحيح.";
+
+        message.className = "danger";
+
+        return;
+    }
+
+
+    const newTask = {
+
+        id: Date.now(),
+
+        name:name,
+
+        description:description,
+
+        points:taskPoints
+
+    };
+
+
+    tasks.push(newTask);
+
+
+    localStorage.setItem(
+        "tasks",
+        JSON.stringify(tasks)
+    );
+
+
+    document.getElementById("taskName").value = "";
+
+    document.getElementById("taskDescription").value = "";
+
+    document.getElementById("taskPoints").value = "";
+
+
+    message.innerHTML =
+    "✅ تمت إضافة المهمة بنجاح.";
+
+    message.className = "success";
+
+
+    displayTasks();
+
+}
+
+
+/* =========================
+   التنقل بين الصفحات
+========================= */
+
+function showSection(section){
+
+    document.getElementById("tasks").classList.add("hidden");
+
+    document.getElementById("admin").classList.add("hidden");
+
+    document.getElementById("terms").classList.add("hidden");
+
+
+    document.getElementById(section)
     .classList.remove("hidden");
 
-  document.getElementById("password").value = "";
+
+    document.getElementById("tasksTab")
+    .classList.remove("active");
+
+    document.getElementById("adminTab")
+    .classList.remove("active");
+
+    document.getElementById("termsTab")
+    .classList.remove("active");
+
+
+    if(section === "tasks"){
+
+        document.getElementById("tasksTab")
+        .classList.add("active");
+
+    }
+
+    if(section === "admin"){
+
+        document.getElementById("adminTab")
+        .classList.add("active");
+
+    }
+
+    if(section === "terms"){
+
+        document.getElementById("termsTab")
+        .classList.add("active");
+
+    }
+
 }
 
-function uploadFile(){
 
-  const file =
-    document.getElementById("fileInput").files[0];
+/* =========================
+   حماية عرض النص
+========================= */
 
-  if(!file){
+function escapeHTML(text){
 
-    document.getElementById("uploadMessage")
-      .textContent = "اختر ملفًا أولًا";
+    return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
-    return;
-  }
-
-  document.getElementById("uploadMessage")
-    .textContent =
-    "تم اختيار الملف: " + file.name;
 }
 
-function addPoints(){
 
-  points++;
-  localStorage.setItem("points", points);
-  updatePoints();
+/* =========================
+   تشغيل التطبيق
+========================= */
+
+updateBalance();
+
+displayTasks();
+
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>تطبيق المهام والنقاط</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
 }
+
+body{
+    margin:0;
+    background:#f3f6fb;
+    color:#222;
+}
+
+.container{
+    max-width:600px;
+    margin:auto;
+    padding:15px;
+}
+
+header{
+    background:#111;
+    color:white;
+    padding:20px;
+    border-radius:0 0 20px 20px;
+    text-align:center;
+}
+
+header h1{
+    margin:0 0 8px;
+}
+
+.balance{
+    background:white;
+    color:#111;
+    padding:15px;
+    border-radius:15px;
+    margin-top:15px;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.card{
+    background:white;
+    padding:18px;
+    margin-top:15px;
+    border-radius:16px;
+    box-shadow:0 3px 12px #0001;
+}
+
+.task{
+    border:1px solid #ddd;
+    padding:15px;
+    border-radius:14px;
+    margin-top:12px;
+}
+
+.task h3{
+    margin:0 0 8px;
+}
+
+.task p{
+    color:#666;
+    margin:5px 0 12px;
+}
+
+.points{
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+button{
+    width:100%;
+    padding:13px;
+    border:0;
+    border-radius:10px;
+    background:#111;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:disabled{
+    background:#aaa;
+}
+
+input,textarea{
+    width:100%;
+    padding:13px;
+    margin-top:8px;
+    margin-bottom:12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:16px;
+}
+
+.tabs{
+    display:flex;
+    gap:8px;
+    margin-top:15px;
+}
+
+.tabs button{
+    background:#ddd;
+    color:#222;
+}
+
+.tabs button.active{
+    background:#111;
+    color:white;
+}
+
+.hidden{
+    display:none;
+}
+
+.success{
+    color:green;
+    font-weight:bold;
+}
+
+.danger{
+    color:#b00020;
+}
+
+ul{
+    line-height:2;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>📋 مهامي</h1>
+    <div>أنجز المهام واحصل على النقاط</div>
+
+    <div class="balance">
+        ⭐ رصيدك: <span id="balance">0</span> نقطة
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="tabs">
+        <button id="tasksTab" class="active" onclick="showSection('tasks')">
+            المهام
+        </button>
+
+        <button id="adminTab" onclick="showSection('admin')">
+            إضافة مهمة
+        </button>
+
+        <button id="termsTab" onclick="showSection('terms')">
+            الشروط
+        </button>
+    </div>
+
+
+    <!-- المهام -->
+    <section id="tasks">
+
+        <div class="card">
+            <h2>📋 المهام المتاحة</h2>
+
+            <div id="tasksList"></div>
+        </div>
+
+    </section>
+
+
+    <!-- إضافة مهمة -->
+    <section id="admin" class="hidden">
+
+        <div class="card">
+
+            <h2>➕ إضافة مهمة جديدة</h2>
+
+            <label>اسم المهمة</label>
+            <input
+                id="taskName"
+                type="text"
+                placeholder="مثال: مشاهدة فيديو"
+            >
+
+            <label>وصف المهمة</label>
+            <textarea
+                id="taskDescription"
+                placeholder="اكتب تفاصيل المهمة"
+            ></textarea>
+
+            <label>عدد النقاط</label>
+            <input
+                id="taskPoints"
+                type="number"
+                min="1"
+                placeholder="مثال: 10"
+            >
+
+            <button onclick="addTask()">
+                إضافة المهمة
+            </button>
+
+            <p id="addMessage"></p>
+
+        </div>
+
+    </section>
+
+
+    <!-- الشروط -->
+    <section id="terms" class="hidden">
+
+        <div class="card">
+
+            <h2>📜 شروط الاستخدام</h2>
+
+            <ul>
+                <li>يجب على المستخدم تنفيذ المهمة حسب التعليمات الموضحة.</li>
+
+                <li>لا يجوز استخدام طرق غير مشروعة أو التلاعب بنظام النقاط.</li>
+
+                <li>يحق لإدارة التطبيق رفض أي مهمة لم يتم تنفيذها بالشكل الصحيح.</li>
+
+                <li>النقاط تمنح فقط بعد إكمال المهمة حسب شروطها.</li>
+
+                <li>يحق للإدارة تعديل عدد النقاط المخصصة للمهام.</li>
+
+                <li>يمنع إنشاء حسابات متعددة بهدف استغلال نظام المكافآت.</li>
+
+                <li>يحق للإدارة إيقاف الحسابات التي تخالف شروط الاستخدام.</li>
+
+                <li>استخدام التطبيق يعني موافقة المستخدم على هذه الشروط.</li>
+            </ul>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+/* =========================
+   بيانات التطبيق
+========================= */
+
+let points = Number(localStorage.getItem("points")) || 0;
+
+let tasks = JSON.parse(
+    localStorage.getItem("tasks")
+) || [
+    {
+        id: 1,
+        name: "مهمة تجريبية",
+        description: "هذه مهمة تجريبية يمكنك تعديلها أو حذفها.",
+        points: 10
+    }
+];
+
+let completedTasks = JSON.parse(
+    localStorage.getItem("completedTasks")
+) || [];
+
+
+/* =========================
+   عرض الرصيد
+========================= */
+
+function updateBalance(){
+
+    document.getElementById("balance").textContent = points;
+
+    localStorage.setItem(
+        "points",
+        points
+    );
+}
+
+
+/* =========================
+   عرض المهام
+========================= */
+
+function displayTasks(){
+
+    const list = document.getElementById("tasksList");
+
+    list.innerHTML = "";
+
+    if(tasks.length === 0){
+
+        list.innerHTML =
+        "<p>لا توجد مهام متاحة حاليًا.</p>";
+
+        return;
+    }
+
+    tasks.forEach(task => {
+
+        const completed =
+        completedTasks.includes(task.id);
+
+        const div = document.createElement("div");
+
+        div.className = "task";
+
+        div.innerHTML = `
+
+            <h3>${escapeHTML(task.name)}</h3>
+
+            <p>
+                ${escapeHTML(task.description)}
+            </p>
+
+            <div class="points">
+                ⭐ ${task.points} نقطة
+            </div>
+
+            ${
+                completed
+
+                ?
+
+                `<button disabled>
+                    ✅ تم إكمال المهمة
+                </button>`
+
+                :
+
+                `<button onclick="completeTask(${task.id})">
+                    إكمال المهمة
+                </button>`
+            }
+
+        `;
+
+        list.appendChild(div);
+
+    });
+}
+
+
+/* =========================
+   إكمال المهمة
+========================= */
+
+function completeTask(id){
+
+    const task =
+    tasks.find(t => t.id === id);
+
+    if(!task) return;
+
+    if(completedTasks.includes(id)){
+
+        alert("لقد أكملت هذه المهمة مسبقًا.");
+
+        return;
+    }
+
+    points += Number(task.points);
+
+    completedTasks.push(id);
+
+    localStorage.setItem(
+        "points",
+        points
+    );
+
+    localStorage.setItem(
+        "completedTasks",
+        JSON.stringify(completedTasks)
+    );
+
+    updateBalance();
+
+    displayTasks();
+
+    alert(
+        "🎉 أحسنت!\nتمت إضافة " +
+        task.points +
+        " نقطة إلى رصيدك."
+    );
+}
+
+
+/* =========================
+   إضافة مهمة
+========================= */
+
+function addTask(){
+
+    const name =
+    document.getElementById("taskName").value.trim();
+
+    const description =
+    document.getElementById("taskDescription").value.trim();
+
+    const taskPoints =
+    Number(
+        document.getElementById("taskPoints").value
+    );
+
+    const message =
+    document.getElementById("addMessage");
+
+
+    if(!name){
+
+        message.innerHTML =
+        "❌ اكتب اسم المهمة.";
+
+        message.className = "danger";
+
+        return;
+    }
+
+
+    if(!description){
+
+        message.innerHTML =
+        "❌ اكتب وصف المهمة.";
+
+        message.className = "danger";
+
+        return;
+    }
+
+
+    if(!taskPoints || taskPoints < 1){
+
+        message.innerHTML =
+        "❌ أدخل عدد نقاط صحيح.";
+
+        message.className = "danger";
+
+        return;
+    }
+
+
+    const newTask = {
+
+        id: Date.now(),
+
+        name:name,
+
+        description:description,
+
+        points:taskPoints
+
+    };
+
+
+    tasks.push(newTask);
+
+
+    localStorage.setItem(
+        "tasks",
+        JSON.stringify(tasks)
+    );
+
+
+    document.getElementById("taskName").value = "";
+
+    document.getElementById("taskDescription").value = "";
+
+    document.getElementById("taskPoints").value = "";
+
+
+    message.innerHTML =
+    "✅ تمت إضافة المهمة بنجاح.";
+
+    message.className = "success";
+
+
+    displayTasks();
+
+}
+
+
+/* =========================
+   التنقل بين الصفحات
+========================= */
+
+function showSection(section){
+
+    document.getElementById("tasks").classList.add("hidden");
+
+    document.getElementById("admin").classList.add("hidden");
+
+    document.getElementById("terms").classList.add("hidden");
+
+
+    document.getElementById(section)
+    .classList.remove("hidden");
+
+
+    document.getElementById("tasksTab")
+    .classList.remove("active");
+
+    document.getElementById("adminTab")
+    .classList.remove("active");
+
+    document.getElementById("termsTab")
+    .classList.remove("active");
+
+
+    if(section === "tasks"){
+
+        document.getElementById("tasksTab")
+        .classList.add("active");
+
+    }
+
+    if(section === "admin"){
+
+        document.getElementById("adminTab")
+        .classList.add("active");
+
+    }
+
+    if(section === "terms"){
+
+        document.getElementById("termsTab")
+        .classList.add("active");
+
+    }
+
+}
+
+
+/* =========================
+   حماية عرض النص
+========================= */
+
+function escapeHTML(text){
+
+    return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   تشغيل التطبيق
+========================= */
+
+updateBalance();
+
+displayTasks();
 
 </script>
 
